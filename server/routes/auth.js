@@ -10,7 +10,7 @@ router.get('/linkedin', passport.authenticate('linkedin'), function(req, res){
 
 router.get('/linkedin/callback', passport.authenticate('linkedin', {
   successRedirect: '/',
-  failureRedirect: '/login'
+  failureRedirect: '/'
 }));
 
 module.exports = router;

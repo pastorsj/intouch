@@ -6,7 +6,7 @@ import api from '../api';
 class App extends Component {
 
   componentDidMount() {
-    api.get('oauth/linkedin')
+    api.get('auth/linkedin')
   }
 
   render() {
