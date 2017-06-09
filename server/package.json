@@ -11,9 +11,12 @@
     "cors": "^2.8.3",
     "debug": "~2.6.3",
     "express": "~4.15.2",
+    "express-session": "^1.15.3",
     "jade": "~1.11.0",
     "morgan": "~1.8.1",
     "node-linkedin": "^0.5.4",
+    "passport": "^0.3.2",
+    "passport-linkedin-oauth2": "^1.5.0",
     "serve-favicon": "~2.4.2"
   }
 }
