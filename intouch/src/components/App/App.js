@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import api from '../api';
 
 class App extends Component {
+
+  componentDidMount() {
+    api.get('oauth/linkedin')
+  }
+
   render() {
     return (
       <div className="App">

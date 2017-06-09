@@ -9,6 +9,8 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var auth = require('./routes/auth');
 
+var cors = require('cors');
+
 var app = express();
 
 // uncomment after placing your favicon in /public
@@ -18,6 +20,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cors({
+    origin: '*',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    methods: ['POST', 'GET', 'PUT', 'DELETE']
+}));
+// app.use(helmet());
 
 app.use('/', index);
 app.use('/users', users);

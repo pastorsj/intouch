@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Linkedin = require('node-linkedin')(process.env['LINKED_IN_APP_ID'], process.env['LINKED_IN_SECRET']);
-// ... 
+
 Linkedin.auth.setCallback('callback');
 
 var scope = ['r_basicprofile', 'r_fullprofile', 'r_emailaddress', 'r_network', 'r_contactinfo', 'rw_nus', 'rw_groups', 'w_messages'];
