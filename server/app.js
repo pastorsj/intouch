@@ -20,6 +20,10 @@ var session = require('express-session');
 
 app.use('/', express.static(path.join(__dirname, 'build')))
 
+app.all('/*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+});
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -40,12 +44,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('view engine', 'jade');
 
-app.use(cors({
-    origin: '*',
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: false,
-    methods: ['POST', 'GET', 'PUT', 'DELETE']
-}));
 // app.use(helmet());
 
 app.use('/auth', auth);
@@ -57,14 +55,15 @@ passport.use(new LinkedInStrategy({
   scope: ['r_emailaddress', 'r_basicprofile'],
   state: true
 }, function(accessToken, refreshToken, profile, done) {
-  // asynchronous verification, for effect...
-  process.nextTick(function () {
-    // To keep the example simple, the user's LinkedIn profile is returned to
-    // represent the logged-in user. In a typical application, you would want
-    // to associate the LinkedIn account with a user record in your database,
-    // and return that user instead.
+    console.log('Access token', accessToken);
     return done(null, profile);
-  });
+}));
+
+app.use(cors({
+    origin: '*',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: false,
+    methods: ['POST', 'GET', 'PUT', 'DELETE']
 }));
 
 // catch 404 and forward to error handler
