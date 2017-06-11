@@ -1,25 +1,41 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
 import api from '../api';
+import FontIcon from 'material-ui/FontIcon';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+import FlatButton from 'material-ui/FlatButton';
+import './App.css';
+
+const styles = {
+  button: {
+    margin: 12,
+  },
+  title: {
+    cursor: 'pointer',
+  }
+}
 
 class App extends Component {
 
-  componentDidMount() {
-    api.get('auth/linkedin')
-  }
-
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <MuiThemeProvider>
+        <AppBar
+          title={<span style={styles.title}>In Touch</span>}
+          iconElementRight={
+            <FlatButton
+              href="auth/linkedin"
+              target="_blank"
+              labelPosition="before"
+              label="Login"
+              primary={true}
+              style={styles.button}
+              icon={<FontIcon className="fa fa-linkedin-square"/>}
+            />
+          }
+        />
+        
+      </MuiThemeProvider>
     );
   }
 }
