@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var auth = require('./routes/auth');
+var linkedin = require('./routes/linkedin');
 
 var cors = require('cors');
 
@@ -44,6 +45,7 @@ app.use(passport.session()); // persistent login sessions
 // app.use(helmet());
 
 app.use('/auth', auth);
+app.use('/linkedin', linkedin);
 
 passport.use(new LinkedInStrategy({
   clientID: process.env['LINKED_IN_APP_ID'],
@@ -52,7 +54,7 @@ passport.use(new LinkedInStrategy({
   scope: ['r_emailaddress', 'r_basicprofile'],
   state: true
 }, function(accessToken, refreshToken, profile, done) {
-    console.log('Access token', accessToken);
+    req.session.token  = accessToken;
     return done(null, profile);
 }));
 

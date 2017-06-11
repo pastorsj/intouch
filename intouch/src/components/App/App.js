@@ -4,6 +4,7 @@ import FontIcon from 'material-ui/FontIcon';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import './App.css';
 
 const styles = {
@@ -17,15 +18,25 @@ const styles = {
 
 class App extends Component {
 
+  getCompany() {
+    api.get('/linkedin')
+      .then((res) => {
+        console.log('res', res);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+  }
+
   render() {
     return (
       <MuiThemeProvider>
+        <div>
         <AppBar
           title={<span style={styles.title}>In Touch</span>}
           iconElementRight={
             <FlatButton
               href="auth/linkedin"
-              target="_blank"
               labelPosition="before"
               label="Login"
               primary={true}
@@ -34,7 +45,13 @@ class App extends Component {
             />
           }
         />
-        
+        <RaisedButton
+          label="Get Company Test"
+          primary={true}
+          style={styles.button}
+          onClick={this.getCompany}
+        />
+        </div>
       </MuiThemeProvider>
     );
   }
