@@ -22,6 +22,7 @@ app.use('/', express.static(path.join(__dirname, 'build')))
 
 app.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
+    next();
 });
 
 app.use(logger('dev'));
@@ -39,10 +40,6 @@ app.use(session(
 )); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.set('view engine', 'jade');
 
 // app.use(helmet());
 
