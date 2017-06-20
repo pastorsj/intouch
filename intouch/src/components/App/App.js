@@ -51,6 +51,9 @@ class App extends Component {
           style={styles.button}
           onClick={this.getCompany}
         />
+        {
+          this.props.children
+        }
         </div>
       </MuiThemeProvider>
     );

@@ -19,13 +19,11 @@ var session = require('express-session');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
-app.use(express.static(path.join(__dirname, 'build')))
-
-app.all('/*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    next();
-});
-
+/**
+ * -----------------------------------------------------------------------------
+ * Setup
+ * -----------------------------------------------------------------------------
+ */
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -39,32 +37,60 @@ app.use(session(
     cookie: { secure: true }
   }
 )); // session secret
+
+app.use(express.static(path.join(__dirname, 'build')))
+
+/**
+ * -----------------------------------------------------------------------------
+ * Passport Code
+ * -----------------------------------------------------------------------------
+ */
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-
-// app.use(helmet());
-
-app.use('/auth', auth);
-app.use('/linkedin', linkedin);
 
 passport.use(new LinkedInStrategy({
   clientID: process.env['LINKED_IN_APP_ID'],
   clientSecret: process.env['LINKED_IN_SECRET'],
   callbackURL: "http://localhost:3001/auth/linkedin/callback",
   scope: ['r_emailaddress', 'r_basicprofile'],
-  state: true
-}, function(accessToken, refreshToken, profile, done) {
-    req.session.token  = accessToken;
-    return done(null, profile);
+  passReqToCallback: true
+}, (req, accessToken, refreshToken, profile, done) => {
+    req.session.token = accessToken;
+    done(null, profile);
 }));
 
-app.use(cors({
-    origin: '*',
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: false,
-    methods: ['POST', 'GET', 'PUT', 'DELETE']
-}));
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
 
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+/**
+ * -----------------------------------------------------------------------------
+ * Cross Origin Requests
+ * -----------------------------------------------------------------------------
+ */
+
+app.all('/*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+});
+
+/**
+ * -----------------------------------------------------------------------------
+ * Routes
+ * -----------------------------------------------------------------------------
+ */
+app.use('/auth', auth);
+app.use('/linkedin', linkedin);
+
+/**
+ * -----------------------------------------------------------------------------
+ * Error Handling
+ * -----------------------------------------------------------------------------
+ */
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -80,7 +106,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  console.error(err);
 });
 
 module.exports = app;
