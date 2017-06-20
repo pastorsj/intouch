@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route, IndexRedirect, browserHistory} from 'react-router';
+import {Router, Route, browserHistory} from 'react-router';
 import App from './components/App/App';
 import LinkedIn from './components/LinkedIn/LinkedIn';
 import LinkedInCallback from './components/LinkedIn/LinkedInCallback';

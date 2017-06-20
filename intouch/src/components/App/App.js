@@ -21,7 +21,27 @@ class App extends Component {
   getCompany() {
     api.get('/linkedin')
       .then((res) => {
-        console.log('res', res);
+        console.log('Sample Company', res);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+  }
+
+  getConnections() {
+    api.get('/linkedin/connections')
+      .then((res) => {
+        console.log('Connections', res);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+  }
+
+  getMyProfile() {
+    api.get('/linkedin/profile')
+      .then((res) => {
+        console.log('Profile', res);
       })
       .catch((err) => {
         console.error(err);
@@ -50,6 +70,18 @@ class App extends Component {
           primary={true}
           style={styles.button}
           onClick={this.getCompany}
+        />
+        <RaisedButton
+          label="Get Connections Test"
+          primary={true}
+          style={styles.button}
+          onClick={this.getConnections}
+        />
+        <RaisedButton
+          label="Get Profile Test"
+          primary={true}
+          style={styles.button}
+          onClick={this.getMyProfile}
         />
         {
           this.props.children
