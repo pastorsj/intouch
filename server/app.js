@@ -15,6 +15,21 @@ var app = express();
 var passport = require('passport');
 var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
+var redis = require("redis").createClient();
+
+var options = {
+  host: '127.0.0.1',
+  port: 6379
+}
+
+var sessionConfig = {
+    secret: 'SECRET',
+    resave: false,
+    store: new RedisStore({ host: 'localhost', port: 6379, client: redis }),
+    saveUninitialized: false,
+    cookie: { secure: false }
+}
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -26,16 +41,11 @@ var session = require('express-session');
  */
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(session(
-  {
-    secret: 'SECRET',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
-  }
+  sessionConfig
 )); // session secret
 
 app.use(express.static(path.join(__dirname, 'build')))
@@ -55,8 +65,9 @@ passport.use(new LinkedInStrategy({
   scope: ['r_emailaddress', 'r_basicprofile'],
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
-    req.session.token = accessToken;
-    done(null, profile);
+  req.session.token = accessToken;
+  console.log('token', req.session.token);
+  done(null, profile);
 }));
 
 passport.serializeUser(function(user, done) {
@@ -85,6 +96,11 @@ app.all('/*', function(req, res, next) {
  */
 app.use('/auth', auth);
 app.use('/linkedin', linkedin);
+
+app.get('/logout', (req, res, next) => {
+  req.logout();
+  res.redirect('/')
+})
 
 /**
  * -----------------------------------------------------------------------------
